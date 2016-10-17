@@ -52,8 +52,8 @@ class PlayGround {
     }
 
     private void moveRight() {
-        for (int i = blocks.length - 1; i >= 0; i--)
-            reverseSolveRow(blocks[i]);
+        for (int i = 0; i < blocks.length; i++)
+            reverse(blocks[i]).solveRow(blocks[i]).reverse(blocks[i]);
     }
 
     private void moveUp() {
@@ -74,8 +74,42 @@ class PlayGround {
             for (int j = 0; j < blocks[i].length; j++) {
                 arr[j] = blocks[j][i];
             }
-            reverseSolveRow(arr);
+            reverse(arr).solveRow(arr).reverse(arr);
         }
+    }
+
+    private PlayGround reverse(Block[] bs) {
+        Block b;
+        for (int i = 0; i < bs.length / 2; i++) {
+            b = bs[i];
+            bs[i] = bs[bs.length - i - 1];
+            bs[bs.length - i - 1] = b;
+        }
+
+        return this;
+    }
+
+    private PlayGround solveRow(Block[] bs) {
+        int availableIndex = -1;
+        for (int i = 0; i < bs.length; i++) {
+            for (int k = availableIndex + 1; k < i; k++) {
+                if (bs[k].getValue() == 0) {
+                    bs[k].swapValue(bs[i]);
+                    availableIndex = k;
+                    break;
+                } else if (bs[k].sameValue(bs[i])) {
+                    bs[k].mergeValue(bs[i]);
+                    availableIndex = k;
+                    break;
+                }
+            }
+        }
+
+        return this;
+    }
+
+    public boolean gameFinished() {
+        return false;
     }
 
     public void print() {
@@ -85,37 +119,5 @@ class PlayGround {
             }
             System.out.println("");
         }
-    }
-
-    private void solveRow(Block[] bs) {
-        for (int i = 0; i < bs.length; i++) {
-            for (int k = 0; k < i; k++) {
-                if (bs[k].getValue() == 0) {
-                    bs[k].swapValue(bs[i]);
-                    break;
-                } else if (bs[k].sameValue(bs[i])) {
-                    bs[k].mergeValue(bs[i]);
-                    break;
-                }
-            }
-        }
-    }
-
-    private void reverseSolveRow(Block[] bs) {
-        for (int i = bs.length - 1; i >= 0; i--) {
-            for (int k = bs.length - 1; k > i; k--) {
-                if (bs[k].getValue() == 0) {
-                    bs[k].swapValue(bs[i]);
-                    break;
-                } else if (bs[k].sameValue(bs[i])) {
-                    bs[k].mergeValue(bs[i]);
-                    break;
-                }
-            }
-        }
-    }
-
-    public boolean gameFinished() {
-        return false;
     }
 }
