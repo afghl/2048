@@ -39,6 +39,8 @@ class PlayGround {
             moveLeft();
         } else if (direction == RIGHT) {
             moveRight();
+        } else if (direction == UP) {
+            moveUp();
         }
     }
 
@@ -71,6 +73,24 @@ class PlayGround {
                         break;
                     } else if (blocks[i][k].sameValue(blocks[i][j])) {
                         blocks[i][k].mergeValue(blocks[i][j]);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void moveUp() {
+        for (int i = 0; i < blocks.length; i++) {
+            for (int j = 0; j < blocks[i].length; j++) {
+                if (blocks[j][i].getValue() == 0) continue;
+                // 找到非空的block，移动或合并。
+                for (int k = 0; k < j; k++) {
+                    if (blocks[k][i].getValue() == 0) {
+                        blocks[k][i].swapValue(blocks[j][i]);
+                        break;
+                    } else if (blocks[k][i].sameValue(blocks[j][i])) {
+                        blocks[k][i].mergeValue(blocks[j][i]);
                         break;
                     }
                 }
