@@ -41,60 +41,40 @@ class PlayGround {
             moveRight();
         } else if (direction == UP) {
             moveUp();
+        } else if (direction == DOWN) {
+            moveDown();
         }
     }
 
     private void moveLeft() {
-        for (int i = 0; i < blocks.length; i++) {
-            for(int j = 0; j < blocks[i].length; j++) {
-                if (blocks[i][j].getValue() == 0) continue;
-                // 找到非空的block，移动或合并。
-                for (int k = 0; k < j; k++) {
-                    if (blocks[i][k].getValue() == 0) {
-                        blocks[i][k].swapValue(blocks[i][j]);
-                        break;
-                    } else if (blocks[i][k].sameValue(blocks[i][j])) {
-                        blocks[i][k].mergeValue(blocks[i][j]);
-                        break;
-                    }
-                }
-            }
-        }
+        for (int i = 0; i < blocks.length; i++)
+            solveRow(blocks[i]);
     }
 
     private void moveRight() {
-        for (int i = blocks.length - 1; i >= 0; i--) {
-            for(int j = blocks[i].length - 1; j >= 0; j--) {
-                if (blocks[i][j].getValue() == 0) continue;
-                // 找到非空的block，移动或合并。
-                for (int k = blocks.length - 1; k > j; k--) {
-                    if (blocks[i][k].getValue() == 0) {
-                        blocks[i][k].swapValue(blocks[i][j]);
-                        break;
-                    } else if (blocks[i][k].sameValue(blocks[i][j])) {
-                        blocks[i][k].mergeValue(blocks[i][j]);
-                        break;
-                    }
-                }
-            }
-        }
+        for (int i = blocks.length - 1; i >= 0; i--)
+            reverseSolveRow(blocks[i]);
     }
 
     private void moveUp() {
+        Block[] arr = new Block[blocks.length];
+
         for (int i = 0; i < blocks.length; i++) {
             for (int j = 0; j < blocks[i].length; j++) {
-                if (blocks[j][i].getValue() == 0) continue;
-                // 找到非空的block，移动或合并。
-                for (int k = 0; k < j; k++) {
-                    if (blocks[k][i].getValue() == 0) {
-                        blocks[k][i].swapValue(blocks[j][i]);
-                        break;
-                    } else if (blocks[k][i].sameValue(blocks[j][i])) {
-                        blocks[k][i].mergeValue(blocks[j][i]);
-                        break;
-                    }
-                }
+                arr[j] = blocks[j][i];
             }
+            solveRow(arr);
+        }
+    }
+
+    private void moveDown() {
+        Block[] arr = new Block[blocks.length];
+
+        for (int i = 0; i < blocks.length; i++) {
+            for (int j = 0; j < blocks[i].length; j++) {
+                arr[j] = blocks[j][i];
+            }
+            reverseSolveRow(arr);
         }
     }
 
@@ -104,6 +84,34 @@ class PlayGround {
                 System.out.print(blocks[i][j] + " ");
             }
             System.out.println("");
+        }
+    }
+
+    private void solveRow(Block[] bs) {
+        for (int i = 0; i < bs.length; i++) {
+            for (int k = 0; k < i; k++) {
+                if (bs[k].getValue() == 0) {
+                    bs[k].swapValue(bs[i]);
+                    break;
+                } else if (bs[k].sameValue(bs[i])) {
+                    bs[k].mergeValue(bs[i]);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void reverseSolveRow(Block[] bs) {
+        for (int i = bs.length - 1; i >= 0; i--) {
+            for (int k = bs.length - 1; k > i; k--) {
+                if (bs[k].getValue() == 0) {
+                    bs[k].swapValue(bs[i]);
+                    break;
+                } else if (bs[k].sameValue(bs[i])) {
+                    bs[k].mergeValue(bs[i]);
+                    break;
+                }
+            }
         }
     }
 
